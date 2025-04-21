@@ -1,3 +1,6 @@
 # dukascript
 
-This repository contains the packages for different languages for downloading and streaming historical data from Dukascopy Bank SA.
+Download and stream historical price data for variety of financial instruments (e.g. Forex, Commodities and Indices) from Dukascopy Bank SA. , including support for tick-level and aggregated intervals.
+
+## Documentation
+- Python
