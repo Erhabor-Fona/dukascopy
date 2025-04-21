@@ -1,4 +1,4 @@
-package main
+package dukascript
 
 import (
 	"context"
@@ -6,8 +6,6 @@ import (
 	"log"
 	"os"
 	"time"
-
-	"github.com/Eghosa-Osayande/dukascript/go/dukascript"
 )
 
 func examples() {
@@ -17,13 +15,13 @@ func examples() {
 		start, _ := time.Parse(time.DateOnly, "2025-04-21")
 		end := start.Add(time.Hour * 24)
 
-		df := dukascript.Fetch(ctx, dukascript.FetchArgs{
-			Instrument: dukascript.INSTRUMENT_FX_MAJORS_AUD_USD,
-			OfferSide:  dukascript.OFFER_SIDE_BID,
+		df := Fetch(ctx, FetchArgs{
+			Instrument: INSTRUMENT_FX_MAJORS_AUD_USD,
+			OfferSide:  OFFER_SIDE_BID,
 			Start:      start,
 			End:        end,
 			MaxRetries: 2,
-			Interval:   dukascript.INTERVAL_TICK,
+			Interval:   INTERVAL_TICK,
 		})
 
 		file, err := os.Create("out.csv")
@@ -46,14 +44,14 @@ func examples() {
 		start, _ := time.Parse(time.DateOnly, "2025-04-21")
 		end := start.Add(time.Hour * 24)
 
-		dfChan := dukascript.LiveFetch(ctx, dukascript.LiveFetchArgs{
-			Instrument:    dukascript.INSTRUMENT_FX_MAJORS_AUD_USD,
-			OfferSide:     dukascript.OFFER_SIDE_BID,
+		dfChan := LiveFetch(ctx, LiveFetchArgs{
+			Instrument:    INSTRUMENT_FX_MAJORS_AUD_USD,
+			OfferSide:     OFFER_SIDE_BID,
 			Start:         start,
 			End:           end,
 			MaxRetries:    2,
 			IntervalValue: 1,
-			TimeUnit:      dukascript.TIME_UNIT_HOUR,
+			TimeUnit:      TIME_UNIT_HOUR,
 		})
 
 		file, err := os.Create("out.json")
@@ -63,7 +61,7 @@ func examples() {
 		}
 
 		defer file.Close()
-		var df dukascript.Dataframe
+		var df Dataframe
 
 		for df = range dfChan {
 		}
@@ -82,14 +80,14 @@ func examples() {
 		start, _ := time.Parse(time.DateOnly, "2025-04-21")
 		var end time.Time
 
-		dfChan := dukascript.LiveFetch(ctx, dukascript.LiveFetchArgs{
-			Instrument:    dukascript.INSTRUMENT_FX_MAJORS_AUD_USD,
-			OfferSide:     dukascript.OFFER_SIDE_BID,
+		dfChan := LiveFetch(ctx, LiveFetchArgs{
+			Instrument:    INSTRUMENT_FX_MAJORS_AUD_USD,
+			OfferSide:     OFFER_SIDE_BID,
 			Start:         start,
 			End:           end,
 			MaxRetries:    2,
 			IntervalValue: 1,
-			TimeUnit:      dukascript.TIME_UNIT_HOUR,
+			TimeUnit:      TIME_UNIT_HOUR,
 		})
 
 		file, err := os.Create("out2.json")
@@ -98,7 +96,7 @@ func examples() {
 			return
 		}
 
-		var df dukascript.Dataframe
+		var df Dataframe
 
 		defer file.Close()
 		defer func() {
