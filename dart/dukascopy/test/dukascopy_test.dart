@@ -1,54 +1,70 @@
 import 'package:dukascopy/dukascopy.dart';
 import 'package:test/test.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
+import 'dart:convert';
 
 void main() {
-  group('Dukascopy API package', () {
-    test('fetchInstrumentGroups returns a non‑empty map with known keys', () async {
-      final groups = await fetchInstrumentGroups();
-      expect(groups, isNotEmpty, reason: 'Should retrieve at least one group');
-      expect(groups.containsKey('FX'), isTrue, reason: '"FX" (Forex) group should be present');
-      final fx = groups['FX']!;
-      expect(fx.title, equals('Forex'));
-      expect(fx.instruments, contains('EUR/USD'));
+  group('Dukascopy API', () {
+    test('fetchInstrumentGroups parses JSONP correctly', () async {
+      const callback = '_callbacks____TESTCB';
+      const payload = '{"groups":{"FX":{"id":"FX","title":"Forex","instruments":["EUR/USD"]}}}';
+      final body = '$callback($payload);';
+      final mockClient = MockClient((_) async => http.Response(body, 200));
+
+      final groups = await fetchInstrumentGroups(client: mockClient);
+      expect(groups, isNotEmpty);
+      expect(groups['FX']?.title, equals('Forex'));
+      expect(groups['FX']?.instruments, contains('EUR/USD'));
     });
 
-    test('fetch returns a batch of rows for EUR/USD 1DAY', () async {
-      final start = DateTime.utc(2025, 1, 1);
-      final lastUpdate = start.millisecondsSinceEpoch;
+    test('fetch returns parsed rows from JSONP', () async {
+      const callback = '_callbacks____TESTCB2';
+      // A single OHLC row: [timestamp, open, high, low, close, volume]
+      final row = [1625097600000, 1.10, 1.15, 1.05, 1.12, 1234];
+      final payload = json.encode([row]);
+      final body = '$callback($payload);';
+      final mockClient = MockClient((_) async => http.Response(body, 200));
+
       final rows = await fetch(
         instrument: 'EUR/USD',
         interval: '1DAY',
         offerSide: 'B',
-        lastUpdateMillis: lastUpdate,
-        limit: 10,
+        lastUpdateMillis: 0,
+        limit: 1,
+        client: mockClient,
       );
-      expect(rows, isNotEmpty, reason: 'Should fetch at least one data row');
-      expect(rows.first, isA<List<dynamic>>());
-      // row[0] is timestamp in ms
-      final ts = rows.first[0] as int;
-      expect(ts, greaterThanOrEqualTo(lastUpdate));
+      expect(rows, hasLength(1));
+      expect(rows.first, equals(row));
     });
 
-    test('stream emits at least one tick row within a short window', () async {
-      final now = DateTime.now().toUtc();
-      final startMillis = now.subtract(const Duration(minutes: 1)).millisecondsSinceEpoch;
-      final endMillis   = now.millisecondsSinceEpoch;
+    test('stream yields rows until endMillis', () async {
+      const callback = '_callbacks____STREAMCB';
+      final rowsA = [
+        [1000, 1, 2, 3, 4, 5],
+        [2000, 6, 7, 8, 9, 10],
+      ];
+      final payloadA = json.encode(rowsA);
+      final bodyA = '$callback($payloadA);';
 
-      final tickStream = stream(
+      // After first call, return an empty list to break
+      final mockClient = MockClient((_) async {
+        return http.Response(bodyA, 200);
+      });
+
+      final results = <List<dynamic>>[];
+      await for (final r in stream(
         instrument: 'EUR/USD',
-        interval: 'TICK',
+        interval: '1DAY',
         offerSide: 'B',
-        startMillis: startMillis,
-        endMillis: endMillis,
-        limit: 5,
-      );
-
-      final firstTick = await tickStream.first.timeout(
-        const Duration(seconds: 5),
-        onTimeout: () => fail('Expected at least one tick within 5s'),
-      );
-      expect(firstTick, isA<List<dynamic>>());
-      expect(firstTick.length, greaterThanOrEqualTo(2), reason: 'Tick row should have bid & ask');
+        startMillis: 0,
+        endMillis: 3000,
+        limit: 2,
+        client: mockClient,
+      )) {
+        results.add(r);
+      }
+      expect(results, equals(rowsA));
     });
   });
 }

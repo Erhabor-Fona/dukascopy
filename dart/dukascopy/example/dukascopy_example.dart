@@ -5,7 +5,7 @@ Future<void> main() async {
   final groups = await fetchInstrumentGroups();
   print('Available instrument groups:');
   groups.forEach((key, group) {
-    print('  \$key -> \${group.title} (\${group.instruments.length} instruments)');
+    print('  $key -> ${group.title} (${group.instruments.length} instruments)');
   });
 
   // 2. Fetch a batch of daily EUR/USD data
@@ -20,7 +20,7 @@ Future<void> main() async {
   print('\nEUR/USD Daily Data (first 5 rows):');
   for (var row in dailyRows) {
     final ts = DateTime.fromMillisecondsSinceEpoch(row[0] as int, isUtc: true);
-    print('  \$ts -> OHLC: [\${row[1]}, \${row[2]}, \${row[3]}, \${row[4]}], vol=\${row[5]}');
+    print('  $ts -> OHLC: [${row[1]}, ${row[2]}, ${row[3]}, ${row[4]}], vol=${row[5]}');
   }
 
   // 3. Stream ticks for 10 seconds
@@ -35,6 +35,6 @@ Future<void> main() async {
     limit: 10,
   );
   await for (final tick in tickStream) {
-    print('  Tick: timestamp=\${tick[0]}, bid=\${tick[1]}, ask=\${tick[2]}');
+    print('  Tick: timestamp=${tick[0]}, bid=${tick[1]}, ask=${tick[2]}');
   }
 }

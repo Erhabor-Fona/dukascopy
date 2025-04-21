@@ -15,20 +15,15 @@ String _randomCallback() {
   return '_callbacks____${List.generate(9, (_) => chars[rand.nextInt(chars.length)]).join()}';
 }
 
-String _stripJsonp(String text, String callback) {
-  final prefix = '$callback(';
-  final suffix = ');';
-  var result = text;
-  if (result.startsWith(prefix)) {
-    result = result.substring(prefix.length);
+String _stripJsonp(String text) {
+  final start = text.indexOf('(');
+  final end = text.lastIndexOf(')');
+  if (start == -1 || end == -1 || end <= start) {
+    return text;
   }
-  if (result.endsWith(suffix)) {
-    result = result.substring(0, result.length - suffix.length);
-  }
-  return result;
+  return text.substring(start + 1, end);
 }
 
-/// Fetch the instrument groups from Dukascopy.
 /// Fetch raw chart data as a list of rows.
 Future<List<List<dynamic>>> fetch({
   required String instrument,
@@ -36,7 +31,9 @@ Future<List<List<dynamic>>> fetch({
   required String offerSide,
   required int lastUpdateMillis,
   int? limit,
+  http.Client? client,
 }) async {
+  final httpClient = client ?? http.Client();
   final callback = _randomCallback();
   final params = {
     'path': 'chart/json3',
@@ -51,9 +48,9 @@ Future<List<List<dynamic>>> fetch({
     if (limit != null) 'limit': limit.toString(),
   };
   final uri = Uri.parse(_chartUrl).replace(queryParameters: params);
-  final response = await http.get(uri, headers: _defaultHeaders);
-  final jsonText = _stripJsonp(response.body, callback);
-  final raw = json.decode(jsonText) as List<dynamic>;
+  final response = await httpClient.get(uri, headers: _defaultHeaders);
+  final stripped = _stripJsonp(response.body);
+  final raw = json.decode(stripped) as List<dynamic>;
   return raw.map((e) => (e as List<dynamic>).toList()).toList();
 }
 
@@ -66,7 +63,9 @@ Stream<List<dynamic>> stream({
   int? endMillis,
   int maxRetries = 7,
   int? limit,
+  http.Client? client,
 }) async* {
+  final httpClient = client ?? http.Client();
   var retries = 0;
   var cursor = startMillis;
   var first = true;
@@ -79,6 +78,7 @@ Stream<List<dynamic>> stream({
         offerSide: offerSide,
         lastUpdateMillis: cursor,
         limit: limit,
+        client: httpClient,
       );
       if (!first && updates.isNotEmpty && updates[0][0] == cursor) {
         updates.removeAt(0);
@@ -97,7 +97,7 @@ Stream<List<dynamic>> stream({
       first = false;
     } catch (_) {
       if (++retries > maxRetries) rethrow;
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
     }
   }
 }
