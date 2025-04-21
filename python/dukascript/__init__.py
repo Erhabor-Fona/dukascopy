@@ -7,8 +7,6 @@ import string
 from time import sleep
 import logging
 
-from .instruments import *
-
 TIME_UNIT_MONTH = "MONTH"
 TIME_UNIT_WEEK = "WEEK"
 TIME_UNIT_DAY = "DAY"
@@ -32,20 +30,20 @@ INTERVAL_SEC_10 = f"10{TIME_UNIT_SEC}"
 INTERVAL_SEC_1 = f"1{TIME_UNIT_SEC}"
 INTERVAL_TICK = TIME_UNIT_TICK
 
-INTERVALS_SET = {
-    INTERVAL_MONTH_1,
-    INTERVAL_WEEK_1,
-    INTERVAL_DAY_1,
-    INTERVAL_HOUR_4,
-    INTERVAL_HOUR_1,
-    INTERVAL_MIN_30,
-    INTERVAL_MIN_15,
-    INTERVAL_MIN_10,
-    INTERVAL_MIN_5,
-    INTERVAL_MIN_1,
-    INTERVAL_SEC_30,
-    INTERVAL_SEC_10,
-    INTERVAL_SEC_1,
+_interval_units = {
+    INTERVAL_MONTH_1:TIME_UNIT_MONTH,
+    INTERVAL_WEEK_1:TIME_UNIT_WEEK,
+    INTERVAL_DAY_1:TIME_UNIT_DAY,
+    INTERVAL_HOUR_4:TIME_UNIT_HOUR,
+    INTERVAL_HOUR_1:TIME_UNIT_HOUR,
+    INTERVAL_MIN_30:TIME_UNIT_MIN,
+    INTERVAL_MIN_15:TIME_UNIT_MIN,
+    INTERVAL_MIN_10:TIME_UNIT_MIN,
+    INTERVAL_MIN_5:TIME_UNIT_MIN,
+    INTERVAL_MIN_1:TIME_UNIT_MIN,
+    INTERVAL_SEC_30:TIME_UNIT_SEC,
+    INTERVAL_SEC_10:TIME_UNIT_SEC,
+    INTERVAL_SEC_1:TIME_UNIT_SEC,
 }
 
 OFFER_SIDE_BID = "B"
@@ -68,10 +66,6 @@ def _get_custom_logger(debug=False):
         logger.addHandler(ch)
 
     return logger
-
-
-def _is_valid_api_interval(interval):
-    return True if interval in INTERVALS_SET else False
 
 
 def _resample_to_nearest(
@@ -266,8 +260,7 @@ def _stream(
 
 def fetch(
     instrument: str,
-    interval_value: str,
-    time_unit: str,
+    interval: str,
     offer_side: str,
     start: datetime,
     end: datetime,
@@ -276,16 +269,10 @@ def fetch(
     debug=False,
 ):
     logger = _get_custom_logger(debug)
+    time_unit=_interval_units[interval]
     columns = _get_dataframe_columns_for_timeunit(time_unit)
 
     data = []
-
-    interval = (
-        time_unit if time_unit == TIME_UNIT_TICK else f"{interval_value}{time_unit}"
-    )
-
-    if not _is_valid_api_interval(interval):
-        raise ValueError("allowed intervals ", INTERVALS_SET)
 
     datafeed = _stream(
         instrument=instrument,

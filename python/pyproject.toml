@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dukascript"
-version = "0.0.0"
+version = "0.0.1"
 description = "Download tick data from Dukascopy Bank SA to local cache, and simulate time-ordered price streams"
 readme = "README.md"
 authors = [
@@ -20,8 +20,8 @@ classifiers = [
 ]
 keywords = ["tick-data", "forex-data", "tick-api", "ticks", "dukascopy"]
 dependencies = [
-  'pandas'
-	'requests',
+  'pandas',
+	'requests'
 ]
 requires-python = ">=3.10"
 
