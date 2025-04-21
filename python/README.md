@@ -57,27 +57,39 @@ Both `fetch` and `live_fetch` share similar parameters:
 - **fetch**: Fetches static historical data. Returns **one** `DataFrame`.
 - **live_fetch**: Continuously fetches live updates. Returns a **generator** that yields the **same `DataFrame`** with updated data.
 
-When using intervals like `1HOUR`, `fetch()` may return delayed data due to DukasCopy’s aggregation policy. For up-to-date values, use `live_fetch()` which fetches tick data under the hood and reshapes it live.
+When using intervals not based on ticks eg: `1HOUR`, `fetch()` will return delayed data. For up-to-date values, use `live_fetch()` which fetches tick data under the hood and reshapes it based on the `interval_value` and `time_unit`.
 
 ---
 
-## 📊 DataFrame Format
+## 📊 DataFrame Columns
 
-### For tick data:
+### When interval/time_unit is based on tick:
+ie:
+
+`interval = INTERVAL_TICK`
+
+or
+
+`interval_value = 1`
+`time_units = TIME_UNIT_TICK`
 
 | Column      | Description            |
 |-------------|------------------------|
-| `timestamp` | Index (UTC)            |
+| `timestamp` | UTC datetime, Dataframe Index |
 | `bidPrice`  | Bid price              |
 | `askPrice`  | Ask price              |
 | `bidVolume` | Bid volume             |
 | `askVolume` | Ask volume             |
 
-### For aggregated intervals:
+### When interval/time_unit is NOT based on tick
+eg: 5 minutes OHLC candle data
+
+`interval_value = 5`
+`time_units = TIME_UNIT_MIN`
 
 | Column      | Description            |
 |-------------|------------------------|
-| `timestamp` | Index                  |
+| `timestamp` | UTC datetime, Dataframe Index |
 | `open`      | Opening price          |
 | `high`      | Highest price          |
 | `low`       | Lowest price           |
@@ -177,7 +189,5 @@ MIT
 
 ## 👋 Contributing
 
-Pull requests and suggestions welcome!
-```
+Pull requests and suggestions are highly welcome!
 
----

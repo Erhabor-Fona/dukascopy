@@ -31,19 +31,19 @@ INTERVAL_SEC_1 = f"1{TIME_UNIT_SEC}"
 INTERVAL_TICK = TIME_UNIT_TICK
 
 _interval_units = {
-    INTERVAL_MONTH_1:TIME_UNIT_MONTH,
-    INTERVAL_WEEK_1:TIME_UNIT_WEEK,
-    INTERVAL_DAY_1:TIME_UNIT_DAY,
-    INTERVAL_HOUR_4:TIME_UNIT_HOUR,
-    INTERVAL_HOUR_1:TIME_UNIT_HOUR,
-    INTERVAL_MIN_30:TIME_UNIT_MIN,
-    INTERVAL_MIN_15:TIME_UNIT_MIN,
-    INTERVAL_MIN_10:TIME_UNIT_MIN,
-    INTERVAL_MIN_5:TIME_UNIT_MIN,
-    INTERVAL_MIN_1:TIME_UNIT_MIN,
-    INTERVAL_SEC_30:TIME_UNIT_SEC,
-    INTERVAL_SEC_10:TIME_UNIT_SEC,
-    INTERVAL_SEC_1:TIME_UNIT_SEC,
+    INTERVAL_MONTH_1: TIME_UNIT_MONTH,
+    INTERVAL_WEEK_1: TIME_UNIT_WEEK,
+    INTERVAL_DAY_1: TIME_UNIT_DAY,
+    INTERVAL_HOUR_4: TIME_UNIT_HOUR,
+    INTERVAL_HOUR_1: TIME_UNIT_HOUR,
+    INTERVAL_MIN_30: TIME_UNIT_MIN,
+    INTERVAL_MIN_15: TIME_UNIT_MIN,
+    INTERVAL_MIN_10: TIME_UNIT_MIN,
+    INTERVAL_MIN_5: TIME_UNIT_MIN,
+    INTERVAL_MIN_1: TIME_UNIT_MIN,
+    INTERVAL_SEC_30: TIME_UNIT_SEC,
+    INTERVAL_SEC_10: TIME_UNIT_SEC,
+    INTERVAL_SEC_1: TIME_UNIT_SEC,
 }
 
 OFFER_SIDE_BID = "B"
@@ -258,7 +258,7 @@ def fetch(
     debug=False,
 ):
     logger = _get_custom_logger(debug)
-    time_unit=_interval_units[interval]
+    time_unit = _interval_units[interval]
     columns = _get_dataframe_columns_for_timeunit(time_unit)
 
     data = []
@@ -299,6 +299,7 @@ def live_fetch(
     debug=False,
 ):
     logger = _get_custom_logger(debug)
+    assert interval_value > 0
 
     # validate time unit
     _resample_to_nearest(
@@ -343,7 +344,9 @@ def live_fetch(
 
     yield df
 
-    for row in datafeed:
+    last_tick_count = 0
+
+    for tick_count, row in enumerate(datafeed, 0):
 
         timestamp = _resample_to_nearest(
             pd.to_datetime(
@@ -355,19 +358,24 @@ def live_fetch(
             interval_value,
         )
 
-        if time_unit == TIME_UNIT_TICK:
+        if last_timestamp == None:
+            last_timestamp = timestamp.timestamp()
+
+        if time_unit == TIME_UNIT_TICK and interval_value == 1:
             df.loc[timestamp] = [
                 *row[1:],
             ]
             yield df
             continue
 
-        if last_timestamp == None:
-            last_timestamp = timestamp.timestamp()
+        new_tick_count = tick_count // interval_value
 
-        if timestamp.timestamp() != last_timestamp:
+        if (
+            time_unit != TIME_UNIT_TICK
+            and timestamp.timestamp() != last_timestamp.timestamp()
+        ) or (time_unit == TIME_UNIT_TICK and last_tick_count != new_tick_count):
             if open is not None:
-                df.loc[timestamp] = [
+                df.loc[last_timestamp] = [
                     open,
                     high,
                     low,
@@ -376,7 +384,8 @@ def live_fetch(
                 ]
 
                 yield df
-            last_timestamp = timestamp.timestamp()
+            last_timestamp = timestamp
+            last_tick_count = new_tick_count
             open = None
 
         if open is None:
@@ -398,4 +407,5 @@ def live_fetch(
             close,
             volume,
         ]
+        
         yield df
