@@ -54,17 +54,6 @@ def _get_custom_logger(debug=False):
     logger = logging.getLogger("DUKASCRIPT")
     logger.setLevel(logging.DEBUG if debug else logging.INFO)
 
-    if not logger.handlers:
-        # Formatter
-        formatter = logging.Formatter("[%(levelname)s] %(message)s")
-
-        # Console Handler
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG if debug else logging.INFO)
-        ch.setFormatter(formatter)
-
-        logger.addHandler(ch)
-
     return logger
 
 
