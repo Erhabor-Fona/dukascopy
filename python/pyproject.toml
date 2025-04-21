@@ -6,8 +6,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dukascopy_python"
-version = "3.0.0"
-description = "Download tick data from Dukascopy Bank SA to local cache, and simulate time-ordered price streams"
+version = "4.0.0"
+description = "Download and stream historical price data for variety of financial instruments (Forex, Commodities and Indices) from Dukascopy Bank SA."
 readme = "README.md"
 authors = [
   { name="Eghosa Osayande", email="osayandeeghosam@gmail.com" },
