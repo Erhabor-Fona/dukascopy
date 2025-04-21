@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dukascript"
-version = "0.0.1"
+version = "0.0.2"
 description = "Download tick data from Dukascopy Bank SA to local cache, and simulate time-ordered price streams"
 readme = "README.md"
 authors = [
