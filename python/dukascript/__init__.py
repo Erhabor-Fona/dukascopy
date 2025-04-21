@@ -341,6 +341,8 @@ def live_fetch(
         logger=logger,
     )
 
+    yield df
+
     for row in datafeed:
 
         timestamp = _resample_to_nearest(
