@@ -1,4 +1,4 @@
-# 🏦 dukascript
+# 🏦 dukascopy_python
 
 Download and stream historical price data for variety of financial instruments (e.g. Forex, Commodities and Indices) from Dukascopy Bank SA. , including support for tick-level and aggregated intervals.
 
@@ -7,7 +7,7 @@ Download and stream historical price data for variety of financial instruments (
 ## 📦 Installation
 
 ```bash
-pip install dukascript
+pip install dukascopy_python
 ```
 
 ---
@@ -18,8 +18,8 @@ pip install dukascript
 
 ```python
 from datetime import datetime, timedelta
-import dukascript
-from dukascript.instruments import INSTRUMENT_FX_MAJORS_GBP_USD
+import dukascopy_python
+from dukascopy_python.instruments import INSTRUMENT_FX_MAJORS_GBP_USD
 ```
 
 ---
@@ -48,7 +48,7 @@ Both `fetch` and `live_fetch` share similar parameters:
 | Parameter         | Description                                 |
 |-------------------|---------------------------------------------|
 | `interval_value`  | e.g., `1`                                    |
-| `time_unit`       | e.g., `dukascript.TIME_UNIT_HOUR`           |
+| `time_unit`       | e.g., `dukascopy_python.TIME_UNIT_HOUR`           |
 
 ---
 
@@ -118,10 +118,10 @@ df.to_json("data.json")
 start = datetime(2025, 1, 1)
 end = datetime(2025, 2, 1)
 instrument = INSTRUMENT_FX_MAJORS_GBP_USD
-interval = dukascript.INTERVAL_HOUR_1
-offer_side = dukascript.OFFER_SIDE_BID
+interval = dukascopy_python.INTERVAL_HOUR_1
+offer_side = dukascopy_python.OFFER_SIDE_BID
 
-df = dukascript.fetch(
+df = dukascopy_python.fetch(
     instrument,
     interval,
     offer_side,
@@ -141,12 +141,12 @@ now = datetime.now()
 start = datetime(now.year, now.month, now.day)
 end = start + timedelta(hours=24)
 instrument = INSTRUMENT_FX_MAJORS_GBP_USD
-offer_side = dukascript.OFFER_SIDE_BID
+offer_side = dukascopy_python.OFFER_SIDE_BID
 
-iterator = dukascript.live_fetch(
+iterator = dukascopy_python.live_fetch(
     instrument,
     1,
-    dukascript.TIME_UNIT_HOUR,
+    dukascopy_python.TIME_UNIT_HOUR,
     offer_side,
     start,
     end,
@@ -167,12 +167,12 @@ now = datetime.now()
 start = datetime(now.year, now.month, now.day)
 end = None
 instrument = INSTRUMENT_FX_MAJORS_GBP_USD
-offer_side = dukascript.OFFER_SIDE_BID
+offer_side = dukascopy_python.OFFER_SIDE_BID
 
-df_iterator = dukascript.live_fetch(
+df_iterator = dukascopy_python.live_fetch(
     instrument,
     1,
-    dukascript.TIME_UNIT_HOUR,
+    dukascopy_python.TIME_UNIT_HOUR,
     offer_side,
     start,
     end,

@@ -5,8 +5,8 @@ requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dukascript"
-version = "0.0.8"
+name = "dukascopy_python"
+version = "3.0.0"
 description = "Download tick data from Dukascopy Bank SA to local cache, and simulate time-ordered price streams"
 readme = "README.md"
 authors = [
@@ -32,5 +32,5 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Eghosa-Osayande/dukascript"
+Homepage = "https://github.com/Eghosa-Osayande/dukascopy"
 
