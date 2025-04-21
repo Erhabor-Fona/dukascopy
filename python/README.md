@@ -140,6 +140,8 @@ df.to_json("output.json")
 now = datetime.now()
 start = datetime(now.year, now.month, now.day)
 end = start + timedelta(hours=24)
+instrument = INSTRUMENT_FX_MAJORS_GBP_USD
+offer_side = dukascript.OFFER_SIDE_BID
 
 iterator = dukascript.live_fetch(
     instrument,
@@ -164,6 +166,8 @@ df.to_csv("output.csv")
 now = datetime.now()
 start = datetime(now.year, now.month, now.day)
 end = None
+instrument = INSTRUMENT_FX_MAJORS_GBP_USD
+offer_side = dukascript.OFFER_SIDE_BID
 
 df_iterator = dukascript.live_fetch(
     instrument,
