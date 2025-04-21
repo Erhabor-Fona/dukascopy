@@ -359,7 +359,7 @@ def live_fetch(
         )
 
         if last_timestamp == None:
-            last_timestamp = timestamp.timestamp()
+            last_timestamp = timestamp
 
         if time_unit == TIME_UNIT_TICK and interval_value == 1:
             df.loc[timestamp] = [
@@ -407,5 +407,5 @@ def live_fetch(
             close,
             volume,
         ]
-        
+
         yield df
