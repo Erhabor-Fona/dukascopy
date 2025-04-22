@@ -1,11 +1,11 @@
 import 'package:dukascopy/dukascopy.dart';
 
 void main() async {
-  // 1) Load instrument groups
+  // Load instrument groups
   final groups = await fetchInstrumentGroups();
   print('Groups: ${groups.keys}');
 
-  // 2) Fetch 5 days of EUR/USD daily data:
+  // Fetch 5 days of EUR/USD daily data:
   final start = DateTime.utc(2025,1,1);
   final dailyRows = await fetch(
     instrument: 'EUR/USD',
@@ -18,7 +18,7 @@ void main() async {
     print('Timestamp=${row[0]}, OHLC=[${row[1]},${row[2]},${row[3]},${row[4]}], vol=${row[5]}');
   });
 
-  // 3) Stream tick data for the next 10 seconds:
+  // Stream tick data for the next 10 seconds:
   final now = DateTime.now().toUtc();
   await for (final tick in stream(
     instrument: 'EUR/USD',
