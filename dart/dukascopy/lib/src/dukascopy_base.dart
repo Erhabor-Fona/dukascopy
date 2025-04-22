@@ -6,7 +6,7 @@ const _chartUrl = 'https://freeserv.dukascopy.com/2.0/index.php';
 const _defaultHeaders = {
   'User-Agent': 'dart-http-client',
   'Host': 'freeserv.dukascopy.com',
-  'Referer': 'https://freeserv.dukascopy.com/2.0/?path=chart/index',
+  'Referer': 'https://freeserv.dukascopy.com/2.0/?path=chart/index&showUI=true&showTabs=true&showParameterToolbar=true&showOfferSide=true&allowInstrumentChange=true&allowPeriodChange=true&allowOfferSideChange=true&showAdditionalToolbar=true&showExportImportWorkspace=true&allowSocialSharing=true&showUndoRedoButtons=true&showDetachButton=true&presentationType=candle&axisX=true&axisY=true&legend=true&timeline=true&showDateSeparators=true&showZoom=true&showScrollButtons=true&showAutoShiftButton=true&crosshair=true&borders=false&freeMode=false&theme=Pastelle&uiColor=%23000&availableInstruments=l%3A&instrument=EUR/USD&period=5&offerSide=BID&timezone=0&live=true&allowPan=true&width=100%25&height=700&adv=popup&lang=en',
 };
 
 String _randomCallback() {
