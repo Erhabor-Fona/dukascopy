@@ -1,39 +1,66 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# dukascopy_api
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages). 
+A Dart wrapper for Dukascopy’s free charting API. It makes it easy to:
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages). 
--->
+- Fetch available instrument groups (e.g., Forex, Commodities, Indices)  
+- Retrieve historical OHLC (open, high, low, close) data  
+- Stream live tick data (bid/ask prices)  
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+Add the package to your `pubspec.yaml`:
 
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  dukascopy: ^0.1.0
+  ```
+Then fetch:
+```bash
+dart pub get
 ```
+## Usage Example
 
-## Additional information
+```Dart
+import 'package:dukascopy/dukascopy.dart';
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+void main() async {
+  // Load instrument groups
+  final groups = await fetchInstrumentGroups();
+  print('Groups: ${groups.keys}');
+
+  // Fetch 5 days of EUR/USD daily data:
+  final start = DateTime.utc(2025,1,1);
+  final dailyRows = await fetch(
+    instrument: 'EUR/USD',
+    interval: '1DAY',
+    offerSide: 'B',
+    lastUpdateMillis: start.millisecondsSinceEpoch,
+    limit: 5,
+  );
+  dailyRows.forEach((row) {
+    print('Timestamp=${row[0]}, OHLC=[${row[1]},${row[2]},${row[3]},${row[4]}], vol=${row[5]}');
+  });
+
+  // Stream tick data for the next 10 seconds:
+  final now = DateTime.now().toUtc();
+  await for (final tick in stream(
+    instrument: 'EUR/USD',
+    interval: 'TICK',
+    offerSide: 'B',
+    startMillis: now.millisecondsSinceEpoch,
+    endMillis: now.add(const Duration(seconds: 10)).millisecondsSinceEpoch,
+    limit: 10,
+  )) {
+    print('Tick @${tick[0]}: bid=${tick[1]}, ask=${tick[2]}');
+  }
+}
+```
+See example/dukascopy_example.dart for a complete demo.
+
+## Pub.dev
+
+Once published, you can find the package at:
+
+👉 [https://pub.dev/packages/dukascopy_api](https://pub.dev/packages/dukascopy_api)
