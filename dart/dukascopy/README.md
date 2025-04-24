@@ -14,7 +14,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  dukascopy: ^0.1.0
+  dukascopy: ^0.1.1
   ```
 Then fetch:
 ```bash
