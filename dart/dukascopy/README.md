@@ -61,4 +61,6 @@ See example/dukascopy_example.dart for a complete demo.
 
 ## Pub.dev
 
+Once published, you can find the package at:
 
+👉 [https://pub.dev/packages/dukascopy](https://pub.dev/packages/dukascopy)
