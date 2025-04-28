@@ -16,8 +16,8 @@ class InstrumentGroup {
       id: json['id'] as String,
       title: json['title'] as String,
       parent: json['parent'] as String?,
-      instruments: (json['instruments'] as List<dynamic>? ?? <dynamic>[])
-          .cast<String>(),
+      instruments:
+          (json['instruments'] as List<dynamic>? ?? <dynamic>[]).cast<String>(),
     );
   }
 }
