@@ -5,8 +5,8 @@ requires      = ["setuptools>=61.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dukascopy_python"
-version = "4.0.0"
+name = "dukascopy-python"
+version = "4.0.1"
 description = "Download and stream historical price data for variety of financial instruments (Forex, Commodities and Indices) from Dukascopy Bank SA."
 readme = "README.md"
 authors = [
