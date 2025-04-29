@@ -6,7 +6,8 @@ void main() async {
   log('Groups: ${groups.keys}');
 
   // Fetch 5 days of EUR/USD daily data:
-  final start = DateTime.utc(2025,1,1);
+
+  final start = DateTime.utc(2025, 1, 1);
   final dailyRows = await fetch(
     instrument: 'EUR/USD',
     interval: '1DAY',

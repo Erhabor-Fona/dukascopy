@@ -8,7 +8,10 @@ void main() {
   group('Dukascopy API', () {
     test('fetchInstrumentGroups parses JSONP correctly', () async {
       const callback = '_callbacks____TESTCB';
-      const payload = '{"groups":{"FX":{"id":"FX","title":"Forex","instruments":["EUR/USD"]}}}';
+
+      const payload =
+          '{"groups":{"FX":{"id":"FX","title":"Forex","instruments":["EUR/USD"]}}}';
+
       final body = '$callback($payload);';
       final mockClient = MockClient((_) async => http.Response(body, 200));
 
@@ -67,4 +70,6 @@ void main() {
       expect(results, equals(rowsA));
     });
   });
+
 }
+

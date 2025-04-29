@@ -15,7 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - 
 
-## [0.1.1] - 2025-04-24
+## [0.1.3] - 2025-04-25
+
 
 ### Added
 - Initial release of `dukascopy` Dart package  
@@ -27,4 +28,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Example script `example/dukascopy_example.dart` demonstrating basic usage
 
 [Unreleased]: https://pub.dev/packages/dukascopy/versions
-[0.1.0]: https://pub.dev/packages/dukascopy/versions/0.1.0
+
+[0.1.3]: https://pub.dev/packages/dukascopy/versions/0.1.3
+
