@@ -1,21 +1,24 @@
 use futures::stream::{self, Stream};
 use rand::{distributions::Alphanumeric, thread_rng, Rng};
+use reqwest::header::{HeaderMap, REFERER, USER_AGENT};
 use reqwest::Client;
 use serde_json::Value;
 use std::error::Error;
-use reqwest::header::{HeaderMap, USER_AGENT, REFERER};
-
 
 const CHART_URL: &str = "https://freeserv.dukascopy.com/2.0/index.php";
 
 fn random_callback() -> String {
-    let suffix: String = thread_rng().sample_iter(&Alphanumeric).take(9).map(char::from).collect();
+    let suffix: String = thread_rng()
+        .sample_iter(&Alphanumeric)
+        .take(9)
+        .map(char::from)
+        .collect();
     format!("_callbacks____{}", suffix)
 }
 
 fn strip_jsonp(s: &str) -> &str {
     if let (Some(start), Some(end)) = (s.find('('), s.rfind(')')) {
-        &s[start+1..end]
+        &s[start + 1..end]
     } else {
         s
     }
@@ -57,7 +60,12 @@ pub async fn fetch(
                 .parse().unwrap(),
    );
 
-   let resp = http_client.get(CHART_URL).headers(headers).query(&params).send().await?;
+    let resp = http_client
+        .get(CHART_URL)
+        .headers(headers)
+        .query(&params)
+        .send()
+        .await?;
     resp.error_for_status_ref()?;
 
     let body = resp.text().await?;
@@ -69,8 +77,6 @@ pub async fn fetch(
     Ok(raw)
 }
 
-
-
 // Stream rows until `end` timestamp, with simple retry on empty
 pub fn stream(
     instrument: String,
@@ -80,25 +86,25 @@ pub fn stream(
     end: Option<i64>,
     client: Option<Client>,
 ) -> impl Stream<Item = Vec<Value>> {
-    let client = client.unwrap_or_else(Client::new);
+    let client = client.unwrap_or_default();
     stream::unfold((start, true), move |(cursor, first)| {
-        let inst  = instrument.clone();
-        let intl  = interval.clone();
-        let side  = offer_side.clone();
-        let cli   = client.clone();
-        let end_ts = end;  // capture it
+        let inst = instrument.clone();
+        let intl = interval.clone();
+        let side = offer_side.clone();
+        let cli = client.clone();
+        let end_ts = end; // capture it
 
         async move {
             match fetch(&inst, &intl, &side, cursor, None, Some(&cli)).await {
                 Ok(mut rows) if !rows.is_empty() => {
-                    if !first && rows[0][0] == Value::from(cursor) {
+                    if !first && rows[0][0].as_i64() == Some(cursor) {
                         rows.remove(0);
                     }
                     // Take the first row, compute its timestamp, and yield it:
                     let row = rows.remove(0);
-                    let ts  = row[0].as_i64().unwrap_or(cursor);
+                    let ts = row[0].as_i64().unwrap_or(cursor);
                     // If we've passed `end`, bail out:
-                    if end_ts.map_or(false, |e| ts > e) {
+                    if end_ts.is_some_and(|e| ts > e)  {
                         return None;
                     }
                     Some((row, (ts, false)))
@@ -108,5 +114,3 @@ pub fn stream(
         }
     })
 }
-
-

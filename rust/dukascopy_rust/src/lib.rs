@@ -1,7 +1,6 @@
-pub mod models;
-pub mod instrument_generator;
 pub mod dukascopy_base;
-
+pub mod instrument_generator;
+pub mod models;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right

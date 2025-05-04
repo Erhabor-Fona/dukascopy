@@ -1,6 +1,6 @@
-use chrono::{Utc, TimeZone};
-use dukascopy_rust::instrument_generator::fetch_instrument_groups;
+use chrono::{TimeZone, Utc};
 use dukascopy_rust::dukascopy_base::fetch;
+use dukascopy_rust::instrument_generator::fetch_instrument_groups;
 use dukascopy_rust::models::Candle;
 
 #[tokio::test]
@@ -37,14 +37,16 @@ async fn test_candle_conversion() {
     assert!(!raw_rows.is_empty(), "No raw rows returned");
 
     let first_row = raw_rows.into_iter().next().unwrap();
-    let candle = Candle::try_from(first_row)
-        .expect("Failed to convert raw row to Candle");
+    let candle = Candle::try_from(first_row).expect("Failed to convert raw row to Candle");
 
     // Validate fields
     assert_eq!(candle.timestamp, start);
     assert!(candle.open > 0.0, "Open price should be positive");
     assert!(candle.high >= candle.open, "High should be >= open");
     assert!(candle.low <= candle.open, "Low should be <= open");
-    assert!(candle.close >= candle.low && candle.close <= candle.high, "Close should be within low-high range");
+    assert!(
+        candle.close >= candle.low && candle.close <= candle.high,
+        "Close should be within low-high range"
+    );
     assert!(candle.volume >= 0.0, "Volume should be non-negative");
 }
