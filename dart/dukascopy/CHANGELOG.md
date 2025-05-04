@@ -15,16 +15,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 - 
 
-## [0.1.4] - 2025-04-28
+
+## [0.1.5] - 2025-05-05
+
 
 ### Added
 - Initial release of `dukascopy` Dart package  
   - `fetchInstrumentGroups()` to retrieve instrument groups  
   - `fetch()` to download historical OHLC data  
-  - `stream()` to stream live tick data  
+  - `stream()` to stream live tick data
+  -`candles()`  
 - `InstrumentGroup` model and JSONP parsing utilities  
 - Comprehensive error handling for network, HTTP status, empty response, and JSON parsing  
 - Example script `example/dukascopy_example.dart` demonstrating basic usage
 
 [Unreleased]: https://pub.dev/packages/dukascopy/versions
-[0.1.3]: https://pub.dev/packages/dukascopy/versions/0.1.3
+[0.1.5]: https://pub.dev/packages/dukascopy/versions/0.1.5
