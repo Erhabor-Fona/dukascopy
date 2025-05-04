@@ -1,6 +1,6 @@
 name: dukascopy
 description: A Dart wrapper for fetching data from Dukascopy Bank SA API.
-version: 0.1.3
+version: 0.1.5
 repository: https://github.com/Erhabor-Fona/dukascopy
 homepage: https://github.com/Erhabor-Fona/dukascopy
 
