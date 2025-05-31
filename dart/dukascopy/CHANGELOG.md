@@ -16,7 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 
 
 
-## [0.1.5] - 2025-05-05
+## [0.1.3] - 2025-04-25
+
 
 
 ### Added
@@ -30,4 +31,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Example script `example/dukascopy_example.dart` demonstrating basic usage
 
 [Unreleased]: https://pub.dev/packages/dukascopy/versions
-[0.1.5]: https://pub.dev/packages/dukascopy/versions/0.1.5
+
+
+[0.1.3]: https://pub.dev/packages/dukascopy/versions/0.1.3
+
+

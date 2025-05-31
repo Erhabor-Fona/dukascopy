@@ -1,4 +1,4 @@
-# 🏦 dukascopy_python
+# 🏦 dukascopy-python
 
 Download and stream historical price data for variety of financial instruments (e.g. Forex, Commodities and Indices) from Dukascopy Bank SA. , including support for tick-level and aggregated intervals.
 
@@ -7,7 +7,7 @@ Download and stream historical price data for variety of financial instruments (
 ## 📦 Installation
 
 ```bash
-pip install dukascopy_python
+pip install dukascopy-python
 ```
 
 ---

@@ -264,6 +264,7 @@ if __name__ == "__main__":
 
   py_output=""
   go_output=""
+  dart_output=""
 
   for group in groups.values():
     instruments=group.get("instruments")
@@ -275,9 +276,13 @@ if __name__ == "__main__":
       "".upper()
       py_output+=f'''INSTRUMENT_{id.upper()}_{variableName.upper()} = "{instrument}"\n'''
       go_output+=f'''const INSTRUMENT_{id.upper()}_{variableName.upper()} = "{instrument}"\n'''
+      dart_output+=f'''const INSTRUMENT_{id.upper()}_{variableName.upper()} = "{instrument}";\n'''
 
-  with open("python/dukascript/instruments.py","w") as fd:
-      fd.write(py_output)
-  with open("go/instruments.go","w") as fd:
-      fd.write("package dukascript\n\n")
-      fd.write(go_output)
+  # with open("python/dukascopy_python/instruments.py","w") as fd:
+  #     fd.write(py_output)
+  # with open("go/instruments.go","w") as fd:
+  #     fd.write("package dukascript\n\n")
+  #     fd.write(go_output)
+  with open("dart/dukascopy/lib/src/instruments.dart","w") as fd:
+    fd.write("// ignore_for_file: constant_identifier_names\n")
+    fd.write(dart_output)

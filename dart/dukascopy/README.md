@@ -15,7 +15,8 @@ Add the package to your `pubspec.yaml`:
 ```yaml
 dependencies:
 
-  dukascopy: ^0.1.5
+
+  dukascopy: ^0.1.3
 
   ```
 Then fetch:
